@@ -1,8 +1,6 @@
 # JeNot - Jenkins Notifications
 
-![](https://zasoby.ekologia.pl/artykulyNew/17986/xxl/shutterstock-1395585299_800x600.jpg)
-
-(Jenot, fot. shutterstock, [src.](https://www.ekologia.pl/ciekawostki/jenot-opis-wystepowanie-i-zdjecia-zwierze-jenot-ciekawostki,17986.html)
+<img src="/logo.png" height=200px width=200px>
 
 ## What
 A tool to monitor status of Jenkins builds and notify you when they are done.
@@ -15,4 +13,4 @@ Meanwhile, there are cases where only you personally are interested in said noti
 In that case, you have to monitor jenkins jobs from outside. Enter jenot.
 
 ## How
-By using your username and API token to bang on Jenkins REST API and hope that at some point it responds with {"finished": true}. In that case - cue fanfare, [Zenity](https://help.gnome.org/users/zenity/), [telegram-send](https://github.com/rahiel/telegram-send) et. cetera.
+By using your username and API token to bang on Jenkins REST API and hope that at some point it responds with `{"finished": true}`. In that case - cue fanfare, [Zenity](https://help.gnome.org/users/zenity/), [telegram-send](https://github.com/rahiel/telegram-send) et. cetera.
