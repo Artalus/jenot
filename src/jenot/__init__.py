@@ -6,7 +6,7 @@ import time
 import requests
 
 
-def run(JENKINS, USER, TOKEN, url):
+def run(JENKINS, USER, TOKEN, url) -> int:
     if not url.startswith(JENKINS):
         url = JENKINS+url
     if url.endswith('/consoleFull'):
@@ -26,6 +26,6 @@ def run(JENKINS, USER, TOKEN, url):
             continue
         print(j)
         if r == 'SUCCESS':
-            exit(0)
+            return 0
         else:
-            exit(1)
+            return 1
