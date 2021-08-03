@@ -16,6 +16,7 @@ def zenity(url: str, build_ok: bool) -> None:
         '--title', f'Build {result}'
     ])
 
+
 def telegram(url: str, build_ok: bool) -> None:
     result = 'finished' if build_ok else 'failed'
 
@@ -26,3 +27,15 @@ def telegram(url: str, build_ok: bool) -> None:
     p = subprocess.Popen([
         t, f'Task {url} {result}!'
     ])
+
+
+def pynotifier(url: str, build_ok: bool) -> None:
+    result = 'finished' if build_ok else 'failed'
+    from pynotifier import Notification
+    Notification(
+        title='Jenot',
+        description=f'Task {url} {result}!',
+        icon_path='S:/git/Jenot/logo.ico', # On Windows .ico is required, on Linux - .png
+        duration=10,                                   # Duration in seconds
+        urgency='normal'
+    ).send()

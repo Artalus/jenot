@@ -11,14 +11,16 @@ class Args(NamedTuple):
     build: str
     zenity: bool
     telegram: bool
+    pynotifier: bool
 
 def parse_args(argv: Optional[Sequence[str]] = None) -> Args:
     parser = ArgumentParser(default_config_files=['~/.jenotrc', './.jenotrc'])
     parser.add("-j", "--url")
     parser.add("-t", "--token")
     parser.add("-u", "--user")
-    parser.add("-z", "--zenity", action='store_true')
+    parser.add("-zn", "--zenity", action='store_true')
     parser.add("-tg", "--telegram", action='store_true')
+    parser.add("-pn", "--pynotifier", action='store_true')
     parser.add("build")
 
     return Args(**parser.parse_args(argv).__dict__)
@@ -31,6 +33,8 @@ def main(argv: Optional[Sequence[str]] = None) -> None:
         jnotify.zenity(args.build, bool(result))
     if args.telegram:
         jnotify.telegram(args.build, bool(result))
+    if args.pynotifier:
+        jnotify.pynotifier(args.build, bool(result))
     exit(result)
 
 

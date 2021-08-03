@@ -10,6 +10,7 @@ setuptools.setup(
     install_requires=[
         'requests',
         'ConfigArgParse',
+        'py-notifier',
     ],
     entry_points=dict(
         console_scripts=[
