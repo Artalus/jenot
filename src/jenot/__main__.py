@@ -28,13 +28,13 @@ def parse_args(argv: Optional[Sequence[str]] = None) -> Args:
 
 def main(argv: Optional[Sequence[str]] = None) -> None:
     args = parse_args(argv)
-    result = jenot.run(args.url, args.user, args.token, args.build)
+    result, url = jenot.run(args.url, args.user, args.token, args.build)
     if args.zenity:
-        jnotify.zenity(args.build, bool(result))
+        jnotify.zenity(url, result==0)
     if args.telegram:
-        jnotify.telegram(args.build, bool(result))
+        jnotify.telegram(url, result==0)
     if args.pynotifier:
-        jnotify.pynotifier(args.build, bool(result))
+        jnotify.pynotifier(url, result==0)
     exit(result)
 
 

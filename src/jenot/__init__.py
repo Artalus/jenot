@@ -28,6 +28,6 @@ def run(JENKINS, USER, TOKEN, url) -> int:
         y = yaml.load(json.dumps(j), Loader=yaml.FullLoader)
         print(yaml.dump(y))
         if r == 'SUCCESS':
-            return 0
+            return 0, j['url']
         else:
-            return 1
+            return 1, j['url']
