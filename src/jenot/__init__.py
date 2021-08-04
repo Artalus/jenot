@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 
-import sys
+import json
 import time
+import yaml
 
 import requests
 
@@ -24,7 +25,8 @@ def run(JENKINS, USER, TOKEN, url) -> int:
         r = j['result']
         if not r:
             continue
-        print(j)
+        y = yaml.load(json.dumps(j), Loader=yaml.FullLoader)
+        print(yaml.dump(y))
         if r == 'SUCCESS':
             return 0
         else:
