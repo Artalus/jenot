@@ -11,6 +11,8 @@ setuptools.setup(
         'requests',
         'ConfigArgParse',
         'py-notifier',
+        'PyQt5',
+        'PyQt5-stubs'
     ],
     entry_points=dict(
         console_scripts=[
