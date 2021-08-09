@@ -1,0 +1,14 @@
+jenkins:
+  # allow full access without login - DOES NOT WORK
+  # authorizationStrategy:
+  #   unsecured:
+  securityRealm:
+    local:
+      allowsSignup: false
+      users:
+       - id: admin
+         password: nimda
+
+  # crumbIssuer:
+  #   standard:
+  #     excludeClientIPFromCrumb: true
