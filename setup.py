@@ -6,7 +6,7 @@ setuptools.setup(
     packages=setuptools.find_packages(where='src'),
     package_dir={'': 'src'},
     license="MIT",
-    python_requires=">=3.6",
+    python_requires=">=3.9",
     install_requires=[
         'requests',
         'ConfigArgParse',
