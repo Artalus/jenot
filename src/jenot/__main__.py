@@ -1,33 +1,11 @@
-from typing import Optional, Sequence, NamedTuple
-from configargparse import ArgumentParser
-
 import jenot
+from jenot.args import Args
 import jenot.notify as jnotify
 
-class Args(NamedTuple):
-    url: str
-    token: str
-    user: str
-    build: str
-    zenity: bool
-    telegram: bool
-    pynotifier: bool
 
-def parse_args(argv: Optional[Sequence[str]] = None) -> Args:
-    parser = ArgumentParser(default_config_files=['~/.jenotrc', './.jenotrc'])
-    parser.add("-j", "--url")
-    parser.add("-t", "--token")
-    parser.add("-u", "--user")
-    parser.add("-zn", "--zenity", action='store_true')
-    parser.add("-tg", "--telegram", action='store_true')
-    parser.add("-pn", "--pynotifier", action='store_true')
-    parser.add("build")
-
-    return Args(**parser.parse_args(argv).__dict__)
-
-
-def main(argv: Optional[Sequence[str]] = None) -> None:
-    args = parse_args(argv)
+def main() -> None:
+    args = Args.parse(build_required=True)
+    assert args.build
     result, url = jenot.run(args.url, args.user, args.token, args.build)
     if args.zenity:
         jnotify.zenity(url, result==0)

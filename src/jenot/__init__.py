@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-
+from __future__ import annotations
 import json
 import time
 import yaml
@@ -7,7 +7,7 @@ import yaml
 import requests
 
 
-def run(JENKINS, USER, TOKEN, url) -> int:
+def run(JENKINS: str, USER: str, TOKEN: str, url: str) -> tuple[int, str]:
     if not url.startswith(JENKINS):
         url = JENKINS+url
     if url.endswith('/consoleFull'):
