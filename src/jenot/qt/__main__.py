@@ -3,14 +3,13 @@ import signal
 
 from PyQt5.QtWidgets import (
     QApplication,
-    QWidget,
 )
 from PyQt5.QtGui import (
     QIcon,
 )
 
+from jenot.qt.main import MainWidget
 from jenot.qt.tray import JenotTray
-
 
 
 def main() -> None:
@@ -20,7 +19,7 @@ def main() -> None:
     app = QApplication(sys.argv)
     app.setQuitOnLastWindowClosed(False)
 
-    w = QWidget()
+    w = MainWidget()
     trayIcon = JenotTray(QIcon("logo.png"), w)
 
     trayIcon.show()
