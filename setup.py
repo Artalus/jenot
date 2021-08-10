@@ -12,11 +12,16 @@ setuptools.setup(
         'ConfigArgParse',
         'py-notifier',
         'PyQt5',
-        'PyQt5-stubs'
+        'PyQt5-stubs',
+        'PyYAML',
     ],
     entry_points=dict(
         console_scripts=[
-            'jenot = jenot.__main__:main'
+            'jenot = jenot.__main__:main',
+            'jenotg = jenot.qt.__main__:main',
         ]
-    )
+    ),
+    package_data={'jenot': [
+        'qt/ui/*.ui',
+    ]}
 )

@@ -12,17 +12,28 @@ from PyQt5.QtGui import (
 )
 
 from jenot.qt import qapplication
+from jenot.qt.pastewindow import PasteUrlDialog
 
 
-class SystemTrayIcon(QSystemTrayIcon):
+class JenotTray(QSystemTrayIcon):
     def __init__(self, icon: QIcon, parent: QWidget):
-        super().__init__(icon, parent)
+        super().__init__(icon, parent,)
+        self.main_widget = parent
+        self.setProperty
+
         menu = QMenu(parent)
         exitAction = menu.addAction("Exit")
         exitAction.setIcon(QIcon.fromTheme('application-exit'))
         exitAction.triggered.connect(qapplication().quit)
         self.setContextMenu(menu)
-        self.activated.connect(lambda x: self.showMessage("hello", "world"))
+        self.activated.connect(self.on_click)
+
+    def on_click(self, reason: QSystemTrayIcon.ActivationReason) -> None:
+        d = PasteUrlDialog(None)
+        z = d.exec()
+        print(z)
+        if z:
+            print(d.result_data)
 
 
 def main() -> None:
@@ -30,9 +41,10 @@ def main() -> None:
     signal.signal(signal.SIGINT, signal.SIG_DFL)
 
     app = QApplication(sys.argv)
+    app.setQuitOnLastWindowClosed(False)
 
     w = QWidget()
-    trayIcon = SystemTrayIcon(QIcon("logo.png"), w)
+    trayIcon = JenotTray(QIcon("logo.png"), w)
 
     trayIcon.show()
     sys.exit(app.exec())
