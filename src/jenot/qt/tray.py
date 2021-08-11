@@ -34,6 +34,8 @@ class JenotTray(QSystemTrayIcon):
         self.activated.connect(self.on_click)
 
     def on_click(self, reason: QSystemTrayIcon.ActivationReason) -> None:
+        if reason != QSystemTrayIcon.Trigger:
+            return
         d = PasteUrlDialog(None)
         z = d.exec()
         if not z:
