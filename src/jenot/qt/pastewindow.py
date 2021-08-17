@@ -47,6 +47,7 @@ class PasteUrlDialog(QDialog):
         self.result_data = content
         self.accept()
 
+
 if __name__ == '__main__':
     from PyQt5.QtWidgets import (
         QApplication,

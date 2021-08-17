@@ -11,6 +11,7 @@ from jenot.qt import qapplication
 from jenot.qt.main import MainWidget
 from jenot.qt.pastewindow import PasteUrlDialog
 from jenot.qt.processor import Processor
+from jenot.qt.watchlist import WatchlistWindow
 
 
 class JenotTray(QSystemTrayIcon):
@@ -19,12 +20,16 @@ class JenotTray(QSystemTrayIcon):
     def __init__(self, icon: QIcon, parent: MainWidget):
         super().__init__(icon, parent,)
         self.main = parent
-        self.setProperty
 
         menu = QMenu(parent)
-        exitAction = menu.addAction("Exit")
-        exitAction.setIcon(QIcon.fromTheme('application-exit'))
-        exitAction.triggered.connect(qapplication().quit)
+        a = menu.addAction("Exit")
+        a.setIcon(QIcon.fromTheme('application-exit'))
+        a.triggered.connect(qapplication().quit)
+
+        a = menu.addAction("Watchlist")
+        a.setIcon(QIcon.fromTheme('document-new'))
+        a.triggered.connect(self.on_watchlist)
+
         self.setContextMenu(menu)
         self.activated.connect(self.on_click)
 
@@ -37,3 +42,7 @@ class JenotTray(QSystemTrayIcon):
         a = self.main.args
         p = Processor(a.url, a.user, a.token, d.result_data)
         self.main.register(p)
+
+    def on_watchlist(self) -> None:
+        self.w = WatchlistWindow(self.main)
+        self.w.show()
