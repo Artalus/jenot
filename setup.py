@@ -21,6 +21,11 @@ setuptools.setup(
             'jenotg = jenot.qt.__main__:main',
         ]
     ),
+    extras_require={
+        'installer': [
+            'pyinstaller',
+        ]
+    },
     package_data={
         'jenot': [
             'data/logo.*',

@@ -1,0 +1,40 @@
+name: pytest
+
+on:
+  pull_request:
+  push:
+
+jobs:
+  pytest:
+    name: ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-latest]
+        python_version: [3.9]
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.python_version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python_version }}
+    - name: Install dependencies
+      run: |
+        pip install -e .[installer]
+    - name: pyinstaller
+      shell: bash
+      run: |
+        pyinstaller src/jenot/qt/__main__.py --name jenot-qt --icon src/jenot/data/logo.ico
+    - uses: actions/upload-artifact@v2
+      with:
+        name: jenot-qt
+        path: dist
+    - name: pyinstaller-onefile
+      shell: bash
+      run: |
+        rm -rf build dist
+        pyinstaller src/jenot/qt/__main__.py --name jenot-qt-of --onefile --icon src/jenot/data/logo.ico
+    - uses: actions/upload-artifact@v2
+      with:
+        name: jenot-qt-of
+        path: dist
