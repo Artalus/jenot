@@ -1,6 +1,8 @@
 import subprocess
 import shutil
 
+from jenot import logo
+
 
 def zenity(url: str, build_ok: bool) -> None:
     result = 'finished' if build_ok else 'failed'
@@ -35,7 +37,7 @@ def pynotifier(url: str, build_ok: bool) -> None:
     Notification(
         title='Jenot',
         description=f'Task {url} {result}!',
-        icon_path='S:/git/Jenot/logo.ico', # On Windows .ico is required, on Linux - .png
-        duration=10,                                   # Duration in seconds
+        icon_path=logo('auto'),
+        duration=10,
         urgency='normal'
     ).send()

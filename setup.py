@@ -21,7 +21,13 @@ setuptools.setup(
             'jenotg = jenot.qt.__main__:main',
         ]
     ),
-    package_data={'jenot': [
-        'qt/ui/*.ui',
-    ]}
+    package_data={
+        'jenot': [
+            'data/logo.*',
+        ],
+        'jenot.qt': [
+            'ui/*.ui',
+        ]
+    },
+    include_package_data=True,
 )
