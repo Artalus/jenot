@@ -1,6 +1,4 @@
-# JeNot - Jenkins Notifications
-
-<img src="/logo.png" height=200px width=200px>
+# JeNot - Jenkins Notifications <img src="src/jenot/data/logo.png" height=100px width=100px>
 
 ## What
 A tool to notify you when Jenkins builds are done.
