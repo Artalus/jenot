@@ -1,5 +1,6 @@
 
 from PyQt5.QtWidgets import (
+    QMessageBox,
     QSystemTrayIcon,
     QMenu,
 )
@@ -24,7 +25,7 @@ class JenotTray(QSystemTrayIcon):
         menu = QMenu(parent)
         a = menu.addAction("Exit")
         a.setIcon(QIcon.fromTheme('application-exit'))
-        a.triggered.connect(qapplication().quit)
+        a.triggered.connect(self.on_exit)
 
         a = menu.addAction("Watchlist")
         a.setIcon(QIcon.fromTheme('document-new'))
@@ -44,6 +45,11 @@ class JenotTray(QSystemTrayIcon):
         a = self.main.args
         p = Processor(a.url, a.user, a.token, d.result_data)
         self.main.register(p)
+
+    def on_exit(self) -> None:
+        d = QMessageBox.question(None, "Exit?", "Sure you want to exit?")
+        if d == QMessageBox.Yes:
+            qapplication().exit()
 
     def on_watchlist(self) -> None:
         self.w = WatchlistWindow(self.main)
