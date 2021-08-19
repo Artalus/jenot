@@ -1,4 +1,5 @@
 
+from typing import Optional
 from PyQt5.QtWidgets import (
     QMessageBox,
     QSystemTrayIcon,
@@ -17,10 +18,12 @@ from jenot.qt.watchlist import WatchlistWindow
 
 class JenotTray(QSystemTrayIcon):
     main: MainWidget
+    pasteDialog: Optional[PasteUrlDialog]
 
     def __init__(self, icon: QIcon, parent: MainWidget):
         super().__init__(icon, parent,)
         self.main = parent
+        self.pasteDialog = None
 
         menu = QMenu(parent)
         a = menu.addAction("Exit")
@@ -37,10 +40,18 @@ class JenotTray(QSystemTrayIcon):
     def on_click(self, reason: QSystemTrayIcon.ActivationReason) -> None:
         if reason != QSystemTrayIcon.Trigger:
             return
+        if self.pasteDialog:
+            self.pasteDialog.activateWindow()
+            return
+
         d = PasteUrlDialog(None)
+        self.pasteDialog = d
         z = d.exec()
+        self.pasteDialog = None
+
         if not z:
             return
+
         assert d.result_data
         a = self.main.args
         p = Processor(a.url, a.user, a.token, d.result_data)
