@@ -1,4 +1,5 @@
 from PyQt5.QtWidgets import (
+    QMessageBox,
     QWidget,
 )
 from jenot.args import Args
@@ -11,7 +12,12 @@ class MainWidget(QWidget):
 
     def __init__(self):
         super().__init__()
-        self.args = Args.parse(build_required=False)
+        try:
+            self.args = Args.parse(build_required=False)
+        except SystemExit:
+            QMessageBox.critical(None, 'Startup failed',
+                "Could not parse some of required parameters, check your .jenotrc")
+            raise
 
 
     def notify(self, result: int, url: str) -> None:
