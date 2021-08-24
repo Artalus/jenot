@@ -24,6 +24,7 @@ setuptools.setup(
     extras_require={
         'installer': [
             'pyinstaller',
+            'doit',
         ]
     },
     package_data={
