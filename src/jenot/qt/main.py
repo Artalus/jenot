@@ -2,6 +2,7 @@ from PyQt5.QtGui import (
     QIcon,
 )
 from PyQt5.QtWidgets import (
+    QMessageBox,
     QWidget,
 )
 
@@ -16,8 +17,14 @@ class MainWidget(QWidget):
 
     def __init__(self):
         super().__init__()
-        self.jenot_icon = QIcon(logo('png'))
         self.args = Args.parse(build_required=False)
+        try:
+            self.args = Args.parse(build_required=False)
+        except SystemExit:
+            QMessageBox.critical(None, 'Startup failed',
+                "Could not parse some of required parameters, check your .jenotrc")
+            raise
+        self.jenot_icon = QIcon(logo('png'))
 
 
     def notify(self, result: int, url: str) -> None:
