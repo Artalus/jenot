@@ -22,6 +22,7 @@ jobs:
           ${{ runner.os }}-pip-
     - name: Install dependencies
       run: |
+        pip install wheel
         pip install -e .[installer]
     - name: pyinstaller
       shell: bash
