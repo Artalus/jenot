@@ -25,7 +25,7 @@ class LogWindow(QWidget):
         super().__init__()
         self.main = main
         self.initUi()
-        jenot.log.error('qt log window initialized')
+        jenot.log.info('qt log window initialized')
 
     def initUi(self) -> None:
         self.textEdit = QPlainTextEdit(self)
