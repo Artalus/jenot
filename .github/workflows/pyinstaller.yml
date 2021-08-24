@@ -1,23 +1,25 @@
-name: pytest
+name: pyinstaller
 
 on:
   pull_request:
   push:
 
 jobs:
-  pytest:
-    name: ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [windows-latest]
-        python_version: [3.9]
+  pyinstaller:
+    runs-on: windows-latest
     steps:
     - uses: actions/checkout@v2
-    - name: Set up Python ${{ matrix.python_version }}
+    - name: Set up Python
       uses: actions/setup-python@v2
       with:
-        python-version: ${{ matrix.python_version }}
+        python-version: 3.9
+    - uses: actions/cache@v2
+      if: startsWith(runner.os, 'Windows')
+      with:
+        path: ~\AppData\Local\pip\Cache
+        key: ${{ runner.os }}-pip-${{ hashFiles('setup.py') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
     - name: Install dependencies
       run: |
         pip install -e .[installer]
@@ -28,7 +30,7 @@ jobs:
     - uses: actions/upload-artifact@v2
       with:
         name: jenot-qt
-        path: dist
+        path: dist/jenot-qt
     - name: pyinstaller-onefile
       shell: bash
       run: |
@@ -36,4 +38,4 @@ jobs:
     - uses: actions/upload-artifact@v2
       with:
         name: jenot-qt-of
-        path: dist
+        path: dist/jenot-qt-of.exe

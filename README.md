@@ -1,5 +1,7 @@
 # JeNot - Jenkins Notifications <img src="src/jenot/data/logo.png" height=100px width=100px>
 
+> **NOTE**: under construction, buggy, and not production-ready
+
 ## What
 A tool to notify you when Jenkins builds are done.
 
