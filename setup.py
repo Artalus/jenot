@@ -14,6 +14,7 @@ setuptools.setup(
         'PyQt5',
         'PyQt5-stubs',
         'PyYAML',
+        'systemd ; platform_system == "Linux"'
     ],
     entry_points=dict(
         console_scripts=[

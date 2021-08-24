@@ -9,7 +9,7 @@ from PyQt5.QtGui import (
     QIcon,
 )
 
-from jenot.qt import qapplication
+from jenot.qt import qapplication, qlogger
 from jenot.qt.main import MainWidget
 from jenot.qt.pastewindow import PasteUrlDialog
 from jenot.qt.processor import Processor
@@ -23,6 +23,7 @@ class JenotTray(QSystemTrayIcon):
     def __init__(self, icon: QIcon, parent: MainWidget):
         super().__init__(icon, parent,)
         self.main = parent
+        self.logs = qlogger.LogWindow(self.main)
         self.pasteDialog = None
 
         menu = QMenu(parent)
@@ -33,6 +34,10 @@ class JenotTray(QSystemTrayIcon):
         a = menu.addAction("Watchlist")
         a.setIcon(QIcon.fromTheme('document-new'))
         a.triggered.connect(self.on_watchlist)
+
+        a = menu.addAction("Logs")
+        a.setIcon(QIcon.fromTheme('document-print'))
+        a.triggered.connect(self.on_log)
 
         self.setContextMenu(menu)
         self.activated.connect(self.on_click)
@@ -65,3 +70,7 @@ class JenotTray(QSystemTrayIcon):
     def on_watchlist(self) -> None:
         self.w = WatchlistWindow(self.main)
         self.w.show()
+
+    def on_log(self) -> None:
+        self.logs.show()
+        self.logs.activateWindow()
