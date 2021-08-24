@@ -1,13 +1,18 @@
 import logging
+from platform import system
 from typing import Any
-from systemd.journal import JournaldLogHandler
 
 _logger = logging.getLogger('jenot')
-_logger.addHandler(JournaldLogHandler())
+_logger
+
+if system() == 'Linux':
+    from systemd.journal import JournaldLogHandler
+    _logger.addHandler(JournaldLogHandler())
+_logger.addHandler(logging.StreamHandler())
 _logger.setLevel(logging.DEBUG)
 _logger.info("jenot log initialized")
 
-debuf = _logger.debug
+debug = _logger.debug
 info = _logger.info
 error = _logger.error
 exception = _logger.exception
