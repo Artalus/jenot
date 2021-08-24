@@ -1,6 +1,11 @@
+from PyQt5.QtGui import (
+    QIcon,
+)
 from PyQt5.QtWidgets import (
     QWidget,
 )
+
+from jenot import logo
 from jenot.args import Args
 import jenot.notify as jnotify
 from jenot.qt.processor import Processor
@@ -11,6 +16,7 @@ class MainWidget(QWidget):
 
     def __init__(self):
         super().__init__()
+        self.jenot_icon = QIcon(logo('png'))
         self.args = Args.parse(build_required=False)
 
 

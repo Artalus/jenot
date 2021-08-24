@@ -8,7 +8,6 @@ from PyQt5.QtGui import (
     QIcon,
 )
 
-from jenot import logo
 from jenot.qt.main import MainWidget
 from jenot.qt.tray import JenotTray
 import jenot.log as log
@@ -23,7 +22,7 @@ def _main() -> int:
     app.setQuitOnLastWindowClosed(False)
 
     w = MainWidget()
-    trayIcon = JenotTray(QIcon(logo('png')), w)
+    trayIcon = JenotTray(w.jenot_icon, w)
 
     trayIcon.show()
     return app.exec()
