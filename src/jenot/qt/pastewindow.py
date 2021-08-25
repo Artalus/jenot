@@ -32,6 +32,7 @@ class PasteUrlDialog(QDialog):
         super().__init__(parent)
         self.initUI()
         self.result_data = None
+        self.textEdit.paste()
 
 
     def initUI(self) -> None:
@@ -52,6 +53,9 @@ if __name__ == '__main__':
     from PyQt5.QtWidgets import (
         QApplication,
     )
+    import signal
     app = QApplication([])
+    signal.signal(signal.SIGINT, signal.SIG_DFL)
     ex = PasteUrlDialog(None)
+    ex.show()
     app.exec()
