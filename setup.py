@@ -21,12 +21,6 @@ setuptools.setup(
             'jenotg = jenot.qt.__main__:main',
         ]
     ),
-    extras_require={
-        'installer': [
-            'pyinstaller',
-            'doit',
-        ]
-    },
     package_data={
         'jenot': [
             'data/logo.*',
@@ -42,6 +36,10 @@ setuptools.setup(
         ],
         'systemd': [
             'systemd ; platform_system == "Linux"'
+        ],
+        'installer': [
+            'pyinstaller',
+            'doit',
         ],
         'test': [
             'pytest',
