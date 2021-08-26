@@ -10,13 +10,20 @@ import yaml
 import requests
 
 
-def run(JENKINS: str, USER: str, TOKEN: str, url: str) -> tuple[int, str]:
-    if not url.startswith(JENKINS):
-        url = JENKINS+url
+def normalize_build_url(url: str, jenkins_base: str) -> str:
+    if not jenkins_base.endswith('/'):
+        jenkins_base += '/'
+    if not url.startswith(jenkins_base):
+        url = jenkins_base+url
     if url.endswith('/consoleFull'):
         url = url[:-len('/consoleFull')]
     if url.endswith('/console'):
         url = url[:-len('/console')]
+    return url
+
+
+def run(JENKINS: str, USER: str, TOKEN: str, url: str) -> tuple[int, str]:
+    url = normalize_build_url(url, JENKINS)
 
 
     while True:
