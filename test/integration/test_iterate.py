@@ -1,7 +1,9 @@
 import time
 from uuid import uuid4 as uid
 
-import requests
+from api4jenkins import Jenkins
+from api4jenkins.queue import QueueItem
+from api4jenkins.build import Build
 
 from jenot import IterateDecision, iterate
 
@@ -10,14 +12,12 @@ from util.wait import wait_for_200
 QUIET_PERIOD_TIMEOUT=15
 
 def test_iterate_success() -> None:
-    # FIXME: currently restarts builds, but looks always for the first one
-    # TODO: find by id
+    jk = Jenkins('http://localhost:8080')
     U = uid()
-    r = requests.post('http://localhost:8080/job/sleep/buildWithParameters', params=dict(SLEEP=0, UID=U))
-    assert r.status_code == requests.codes.created
-    wait_for_200('http://localhost:8080/job/sleep/1/api/json', timeout=QUIET_PERIOD_TIMEOUT)
+    q: QueueItem = jk.build_job('sleep', SLEEP=0, UID=U)
+    while not q.get_build():
+        time.sleep(1)
+    b: Build = q.get_build()
     time.sleep(1)
-    B = 'http://localhost:8080/job/sleep/1/'
-    it, url = iterate(B, None, None)
+    it, _ = iterate(b.url, None, None)
     assert it == IterateDecision.SUCCESS
-    assert url == B
