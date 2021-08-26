@@ -37,6 +37,10 @@ setuptools.setup(
         'systemd': [
             'systemd ; platform_system == "Linux"'
         ],
+        'installer': [
+            'pyinstaller',
+            'doit',
+        ],
         'test': [
             'pytest',
             'pytest-cov',
