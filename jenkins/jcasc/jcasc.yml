@@ -13,3 +13,5 @@ jenkins:
   # crumbIssuer:
   #   standard:
   #     excludeClientIPFromCrumb: true
+jobs:
+  - file: /var/jenkins_home/jobdsl/sleep.groovy

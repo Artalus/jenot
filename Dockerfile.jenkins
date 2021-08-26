@@ -1,6 +1,5 @@
-FROM jenkins/jenkins:alpine
-COPY --chown=jenkins:jenkins jenkins/ /var/jenkins_home/
-RUN jenkins-plugin-cli --plugin-file /var/jenkins_home/plugins.txt
+FROM jenot-jenkins-plugins
+COPY --chown=jenkins:jenkins jenkins/jcasc /var/jenkins_home/
 ENV CASC_JENKINS_CONFIG=/var/jenkins_home/jcasc.yml
 # runSetupWizard - do not request password and plugins list on start
 # DISABLE_CSRF_PROTECTION - allow scripts to access api without requesting crumbs first
