@@ -15,10 +15,12 @@ In that case, you have to monitor Jenkins jobs from outside. Enter jenot.
 ## How
 By using your username and API token to bang on Jenkins REST API and hope that at some point it responds with `{"finished": true}`. In that case - cue fanfare, [Zenity](https://help.gnome.org/users/zenity/), [telegram-send](https://github.com/rahiel/telegram-send) et. cetera.
 
-## Developing
+---
+# Developing
+
 - `git clone`
 - `python -m venv venv && . venv/bin/activate`
-- `pip install -e .`
+- `pip install -e .[dev,test]`
 - debug in VS Code:
 ```json
 // launch.json
@@ -35,6 +37,45 @@ By using your username and API token to bang on Jenkins REST API and hope that a
 }
 ```
 
-## Installing
+---
+# Testing
+
+- folder `test/unit` contains unit tests that can should be runnable on their own
+- folder `test/integration` contains system tests that will require Jenkins instance
+- `docker build . -f Dockerfile.jenkins-plugins -t jenot-jenkins-plugins`
+- `docker-compose up -d`
+- `pytest`
+
+In VS Code, `command:python.runtests` should work after applying these settings:
+```json
+// settings.json
+{
+    "pythonTestExplorer.testFramework": "pytest",
+    "python.testing.pytestEnabled": true,
+}
+```
+
+To run by hotkey (default is `Alt+A`), use this task:
+```json
+// tasks.json
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "pytest",
+            "command": "${command:python.runtests}",
+            "problemMatcher": [],
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            }
+        }
+    ]
+}
+```
+
+---
+# Installing
+
 - `pip install https://github.com/Artalus/jenot/archive/refs/heads/master.zip`
-TODO: provide executables from pyinstaller or something
+- TODO: provide executables from pyinstaller or something

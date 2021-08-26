@@ -41,6 +41,7 @@ setuptools.setup(
             'pytest',
             'pytest-cov',
             'requests',
+            'api4jenkins',
         ],
     }
 )
