@@ -2,9 +2,9 @@ FROM jenkins/jenkins:alpine
 COPY --chown=jenkins:jenkins jenkins/ /var/jenkins_home/
 RUN jenkins-plugin-cli --plugin-file /var/jenkins_home/plugins.txt
 ENV CASC_JENKINS_CONFIG=/var/jenkins_home/jcasc.yml
-# runSetupWizard - do not request password and plugins list
-# EXCLUDE_SESSION_ID - allow scripts to access api - DOES NOT WORK
+# runSetupWizard - do not request password and plugins list on start
+# DISABLE_CSRF_PROTECTION - allow scripts to access api without requesting crumbs first
 ENV JAVA_OPTS="\
     -Djenkins.install.runSetupWizard=false \
-    -Dhudson.security.csrf.DefaultCrumbIssuer.EXCLUDE_SESSION_ID=true ${JAVA_OPTS} \
-"
+    -Dhudson.security.csrf.GlobalCrumbIssuerConfiguration.DISABLE_CSRF_PROTECTION=true \
+    ${JAVA_OPTS}"
