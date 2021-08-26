@@ -1,4 +1,6 @@
 # JeNot - Jenkins Notifications <img src="src/jenot/data/logo.png" height=100px width=100px>
+[![codecov](https://codecov.io/gh/Artalus/jenot/branch/master/graph/badge.svg?token=95VMZCNHBQ)](https://codecov.io/gh/Artalus/jenot)
+[![tests](https://github.com/Artalus/jenot/actions/workflows/tests.yml/badge.svg)](https://github.com/Artalus/jenot/actions/workflows/tests.yml)
 
 ## What
 A tool to notify you when Jenkins builds are done.
