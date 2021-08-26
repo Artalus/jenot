@@ -70,14 +70,20 @@ def run(JENKINS: str, USER: str, TOKEN: str, url: str) -> tuple[int, str]:
         actual_url = actual_url or url
         if result == IterateDecision.CONNECTION_ERROR:
             conn_errors += 1
+            result = IterateDecision.CONTINUE
         else:
             conn_errors = 0
 
-        if result in (IterateDecision.FAILURE, IterateDecision.SUCCESS):
-            pass
+        if result == IterateDecision.FAILURE:
+            return 1, actual_url
+        elif result == IterateDecision.SUCCESS:
+            return 0, actual_url
         elif result == IterateDecision.CONTINUE:
-            to_sleep = 60 * (conn_errors+1)
-            time.sleep(to_sleep)
+            if conn_errors < MAX_CONN_ERRORS:
+                to_sleep = 60 * (conn_errors+1)
+                time.sleep(to_sleep)
+        else:
+            assert False, f"unknown value {result}"
     else:
         log.error(f'Too many ({MAX_CONN_ERRORS}) connection errors, aborting')
         return 1, actual_url
