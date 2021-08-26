@@ -1,0 +1,9 @@
+FROM jenot-jenkins-plugins
+COPY --chown=jenkins:jenkins jenkins/jcasc /var/jenkins_home/
+ENV CASC_JENKINS_CONFIG=/var/jenkins_home/jcasc.yml
+# runSetupWizard - do not request password and plugins list on start
+# DISABLE_CSRF_PROTECTION - allow scripts to access api without requesting crumbs first
+ENV JAVA_OPTS="\
+    -Djenkins.install.runSetupWizard=false \
+    -Dhudson.security.csrf.GlobalCrumbIssuerConfiguration.DISABLE_CSRF_PROTECTION=true \
+    ${JAVA_OPTS}"

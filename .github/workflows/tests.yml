@@ -1,0 +1,39 @@
+name: tests
+
+on:
+  pull_request:
+  push:
+
+jobs:
+  test-integration:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9
+    - uses: actions/cache@v2
+      if: startsWith(runner.os, 'Linux')
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('setup.py') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+    - name: Install dependencies
+      run: |
+        pip install wheel
+        pip install -e .[dev,test]
+    - name: build plugins docker
+      run: |
+        docker build . -t jenot-jenkins-plugins -f Dockerfile.jenkins-plugins
+    - name: startup compose
+      run: |
+        docker-compose up -d
+        python test/util/wait.py http://localhost:8080/api/json
+    - name: run tests
+      run: |
+        pytest
+    - name: shutdown compose
+      run: |
+        docker-compose down
