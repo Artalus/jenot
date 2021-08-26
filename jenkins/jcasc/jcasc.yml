@@ -3,12 +3,13 @@ jenkins:
   # authorizationStrategy:
   #   unsecured:
   # instead, force creation of single user
+  numExecutors: 10
   securityRealm:
     local:
       allowsSignup: false
       users:
-       - id: admin
-         password: nimda
+        - id: admin
+          password: nimda
 
   # crumbIssuer:
   #   standard:
