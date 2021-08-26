@@ -1,3 +1,6 @@
 [run]
-source = src
-omit = setup.py test/**
+source =
+    src/jenot
+omit =
+    setup.py
+    test/**

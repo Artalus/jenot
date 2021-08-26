@@ -25,7 +25,7 @@ jobs:
         pip install wheel
         pip install -e .[dev,test]
     - name: unit tests
-      run: pytest --cov=./ test/unit/
+      run: pytest test/unit/ --cov --cov-append
     - name: build plugins docker
       run: |
         docker build . -t jenot-jenkins-plugins -f Dockerfile.jenkins-plugins
@@ -34,9 +34,9 @@ jobs:
         docker-compose up -d
         python test/util/wait.py http://localhost:8080/api/json
     - name: integration tests
-      run: pytest --cov=./ test/integration/
+      run: pytest test/integration/ --cov --cov-append
     # - name: system tests
-    #   run: pytest --cov=./ test/system/
+    #   run: pytest test/system/ --cov --cov-append
     - name: shutdown compose
       run: |
         docker-compose down
