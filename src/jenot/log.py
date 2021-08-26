@@ -3,13 +3,15 @@ from platform import system
 from typing import Any
 
 _logger = logging.getLogger('jenot')
-_logger
-
-if system() == 'Linux':
-    from systemd.journal import JournaldLogHandler
-    _logger.addHandler(JournaldLogHandler())
 _logger.addHandler(logging.StreamHandler())
 _logger.setLevel(logging.DEBUG)
+
+if system() == 'Linux':
+    try:
+        from systemd.journal import JournaldLogHandler
+        _logger.addHandler(JournaldLogHandler())
+    except ImportError:
+        _logger.info("systemd python module not installed, no journald support")
 _logger.info("jenot log initialized")
 
 debug = _logger.debug

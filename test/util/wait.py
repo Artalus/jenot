@@ -7,7 +7,7 @@ def wait_for_200(url: str, sleep: float=5, timeout: float=300) -> None:
         try:
             r = requests.get(url)
             print(r.status_code)
-            print(r.content)
+            print(r.content.decode())
             if r.status_code == requests.codes.ok:
                 return
         except requests.exceptions.ConnectionError:
