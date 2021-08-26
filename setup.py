@@ -39,6 +39,7 @@ setuptools.setup(
         ],
         'test': [
             'pytest',
+            'pytest-cov',
             'requests',
         ],
     }

@@ -33,7 +33,11 @@ jobs:
         python test/util/wait.py http://localhost:8080/api/json
     - name: run tests
       run: |
-        pytest
+        pytest --cov=./
     - name: shutdown compose
       run: |
         docker-compose down
+    - name: "Upload coverage to Codecov"
+      uses: codecov/codecov-action@v1
+      with:
+        fail_ci_if_error: true
