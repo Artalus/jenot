@@ -1,0 +1,18 @@
+jenkins:
+  # allow full access without login - DOES NOT WORK for soome reason
+  # authorizationStrategy:
+  #   unsecured:
+  # instead, force creation of single user
+  numExecutors: 10
+  securityRealm:
+    local:
+      allowsSignup: false
+      users:
+        - id: admin
+          password: nimda
+
+  # crumbIssuer:
+  #   standard:
+  #     excludeClientIPFromCrumb: true
+jobs:
+  - file: /var/jenkins_home/jobdsl/sleep.groovy

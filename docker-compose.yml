@@ -1,0 +1,10 @@
+version: '3.4'
+
+services:
+  jenkins:
+    image: jenkins
+    ports:
+      - 8080:8080
+    build:
+      context: .
+      dockerfile: ./Dockerfile.jenkins

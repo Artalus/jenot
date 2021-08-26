@@ -36,4 +36,18 @@ setuptools.setup(
         ]
     },
     include_package_data=True,
+    extras_require={
+        'dev': [
+            'httpie',
+        ],
+        'systemd': [
+            'systemd ; platform_system == "Linux"'
+        ],
+        'test': [
+            'pytest',
+            'pytest-cov',
+            'requests',
+            'api4jenkins',
+        ],
+    }
 )

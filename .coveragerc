@@ -1,0 +1,6 @@
+[run]
+source =
+    src/jenot
+omit =
+    setup.py
+    test/**
