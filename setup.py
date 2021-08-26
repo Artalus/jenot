@@ -31,9 +31,13 @@ setuptools.setup(
         ]
     },
     include_package_data=True,
-    extra_requires={
+    extras_require={
         'dev': [
-            'httpie'
+            'httpie',
+        ],
+        'test': [
+            'pytest',
+            'requests',
         ],
     }
 )
