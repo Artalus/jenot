@@ -44,7 +44,6 @@ By using your username and API token to bang on Jenkins REST API and hope that a
 
 - folder `test/unit` contains unit tests that can should be runnable on their own
 - folder `test/integration` contains system tests that will require Jenkins instance
-- `docker build . -f Dockerfile.jenkins-plugins -t jenot-jenkins-plugins`
 - `docker-compose up -d`
 - `pytest`
 

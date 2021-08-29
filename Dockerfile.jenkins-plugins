@@ -1,3 +1,0 @@
-FROM jenkins/jenkins:alpine
-COPY --chown=jenkins:jenkins jenkins/plugins.txt /var/jenkins_home/
-RUN jenkins-plugin-cli --plugin-file /var/jenkins_home/plugins.txt

@@ -28,7 +28,7 @@ jobs:
       run: pytest test/unit/ --cov --cov-append
     - name: build plugins docker
       run: |
-        docker build . -t jenot-jenkins-plugins -f Dockerfile.jenkins-plugins
+          docker build . -t jenot-jenkins-plugins -f Dockerfile.jenkins
     - name: startup compose
       run: |
         docker-compose up -d
