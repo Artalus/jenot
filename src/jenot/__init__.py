@@ -43,7 +43,6 @@ def iterate(url: str, user: Optional[str], token: Optional[str]) -> tuple[Iterat
         return IterateDecision.CONNECTION_ERROR, None
 
     yaml_resp = yaml.dump(yaml.load(json.dumps(resp), Loader=yaml.FullLoader))
-    log.debug(f'response:')
 
     try:
         if resp['building']:
