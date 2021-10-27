@@ -4,6 +4,10 @@ from typing import Any
 
 _logger = logging.getLogger('jenot')
 _logger.addHandler(logging.StreamHandler())
+__fh = logging.FileHandler('jenot.log')
+__ft = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+__fh.setFormatter(__ft)
+_logger.addHandler(__fh)
 _logger.setLevel(logging.DEBUG)
 
 if system() == 'Linux':
