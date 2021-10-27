@@ -1,4 +1,7 @@
-FROM jenot-jenkins-plugins
+FROM jenkins/jenkins:alpine
+# copying a single file before cli allows for better caching during rebuilds
+COPY --chown=jenkins:jenkins jenkins/plugins.txt /var/jenkins_home/
+RUN jenkins-plugin-cli --plugin-file /var/jenkins_home/plugins.txt
 COPY --chown=jenkins:jenkins jenkins/jcasc /var/jenkins_home/
 ENV CASC_JENKINS_CONFIG=/var/jenkins_home/jcasc.yml
 # runSetupWizard - do not request password and plugins list on start
