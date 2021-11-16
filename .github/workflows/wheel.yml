@@ -1,0 +1,59 @@
+name: wheel
+
+on:
+  pull_request:
+  push:
+
+jobs:
+  wheel:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+    - uses: actions/checkout@v2
+
+    - uses: actions/setup-python@v2
+      with:
+        python-version: 3.9
+
+    - uses: actions/cache@v2
+      if: startsWith(runner.os, 'Linux')
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('setup.py') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+    - uses: actions/cache@v2
+      if: startsWith(runner.os, 'Windows')
+      with:
+        path: ~\AppData\Local\pip\Cache
+        key: ${{ runner.os }}-pip-${{ hashFiles('setup.py') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+
+    - name: Install dependencies
+      run: |
+        pip install wheel
+        pip install -e .
+
+    - name: build wheel
+      run: python setup.py bdist_wheel
+
+    - name: install wheel
+      run: |
+        python -m venv venv
+        . venv/*/activate
+        pip install dist/*.whl
+      shell: bash
+
+    - name: test installed wheel
+      run: |
+        . venv/*/activate
+        jenot --help
+      shell: bash
+
+    - uses: actions/upload-artifact@v2
+      with:
+        name: ${{ runner.os }}-wheel
+        path: dist/*.whl
