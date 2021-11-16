@@ -43,13 +43,13 @@ jobs:
     - name: install wheel
       run: |
         python -m venv venv
-        . venv/bin/activate
+        . venv/*/activate
         pip install dist/*.whl
       shell: bash
 
     - name: test installed wheel
       run: |
-        . venv/bin/activate
+        . venv/*/activate
         jenot --help
 
     - uses: actions/upload-artifact@v2
