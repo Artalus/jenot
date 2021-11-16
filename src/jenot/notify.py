@@ -1,5 +1,6 @@
 import subprocess
 import shutil
+from typing import Any
 
 from jenot import logo
 
@@ -41,3 +42,13 @@ def pynotifier(url: str, build_ok: bool) -> None:
         duration=10,
         urgency='normal'
     ).send()
+
+
+def qt(url: str, build_ok: bool) -> Any:
+    result = 'finished' if build_ok else 'failed'
+    from PyQt5.QtWidgets import QMessageBox
+    return QMessageBox(
+        QMessageBox.Icon.Information,
+        'Jenot',
+        f'Task {url} {result}!',
+    )

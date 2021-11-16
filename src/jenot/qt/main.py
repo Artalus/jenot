@@ -11,13 +11,14 @@ from jenot.args import Args
 import jenot.notify as jnotify
 from jenot.qt.processor import Processor
 
+
 class MainWidget(QWidget):
     args: Args
     processors: list[Processor] = []
 
-    def __init__(self):
+
+    def __init__(self) -> None:
         super().__init__()
-        self.args = Args.parse(build_required=False)
         try:
             self.args = Args.parse(build_required=False)
         except SystemExit:
@@ -28,12 +29,13 @@ class MainWidget(QWidget):
 
 
     def notify(self, result: int, url: str) -> None:
-        if self.args.zenity:
-            jnotify.zenity(url, result==0)
+        ok = (result == 0)
+        # have to store it somewhere so python won't dispose of it
+        self.msgbox = jnotify.qt(url, ok)
+        self.msgbox.show()
+
         if self.args.telegram:
-            jnotify.telegram(url, result==0)
-        if self.args.pynotifier:
-            jnotify.pynotifier(url, result==0)
+            jnotify.telegram(url, ok)
 
 
     def register(self, p: Processor) -> None:
