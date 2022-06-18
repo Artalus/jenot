@@ -51,8 +51,11 @@ In VS Code, `command:python.runtests` should work after applying these settings:
 ```json
 // settings.json
 {
-    "pythonTestExplorer.testFramework": "pytest",
     "python.testing.pytestEnabled": true,
+    "python.testing.pytestArgs": [
+        "test"
+    ],
+    "python.testing.unittestEnabled": false,
 }
 ```
 
@@ -64,7 +67,7 @@ To run by hotkey (default is `Alt+A`), use this task:
     "tasks": [
         {
             "label": "pytest",
-            "command": "${command:python.runtests}",
+            "command": "${command:testing.runAll}",
             "problemMatcher": [],
             "group": {
                 "kind": "test",
