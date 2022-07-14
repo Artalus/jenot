@@ -24,11 +24,6 @@ Cargo.lock
 ### https://raw.github.com/github/gitignore/d0b80a469983a7beece8fa1f5c48a8242318b531/Global/VisualStudioCode.gitignore
 
 .vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
-!.vscode/*.code-snippets
 
 # Local History for Visual Studio Code
 .history/
