@@ -1,3 +1,9 @@
+from typing import cast
+
+from meiga import (
+    Error,
+    Result,
+)
 from PyQt5.QtGui import (
     QIcon,
 )
@@ -6,7 +12,10 @@ from PyQt5.QtWidgets import (
     QWidget,
 )
 
-from jenot import logo
+from jenot import (
+    logo,
+    PollResult,
+)
 from jenot.args import Args
 import jenot.notify as jnotify
 from jenot.qt.processor import Processor
@@ -28,9 +37,13 @@ class MainWidget(QWidget):
         self.jenot_icon = QIcon(logo('png'))
 
 
-    def notify(self, result: int, url: str) -> None:
-        ok = (result == 0)
-        # have to store it somewhere so python won't dispose of it
+    def notify(self, result: Result[PollResult, Error], url: str) -> None:
+        value = result.unwrap()
+        if value is None:
+            ok = False
+        else:
+            ok = cast(PollResult, value).success
+        # have to store msgbox somewhere so python won't dispose of it
         self.msgbox = jnotify.qt(url, ok)
         self.msgbox.show()
 

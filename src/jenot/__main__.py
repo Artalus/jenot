@@ -1,3 +1,4 @@
+from typing import cast
 import jenot
 from jenot.args import Args
 import jenot.notify as jnotify
@@ -6,14 +7,22 @@ import jenot.notify as jnotify
 def main() -> None:
     args = Args.parse(build_required=True)
     assert args.build
-    result, url = jenot.run(args.url, args.user, args.token, args.build)
+    result, refined_url = jenot.run_poll(args.url, args.user, args.token, args.build)
+
+    value = result.unwrap()
+    if value is None:
+        ok = False
+    else:
+        ok = cast(jenot.PollResult, value).success
+
     if args.zenity:
-        jnotify.zenity(url, result==0)
+        jnotify.zenity(refined_url, ok)
     if args.telegram:
-        jnotify.telegram(url, result==0)
+        jnotify.telegram(refined_url, ok)
     if args.pynotifier:
-        jnotify.pynotifier(url, result==0)
-    exit(result)
+        jnotify.pynotifier(refined_url, ok)
+
+    exit(0 if ok else 1)
 
 
 if __name__ == "__main__":
