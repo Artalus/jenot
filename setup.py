@@ -33,6 +33,7 @@ setuptools.setup(
     extras_require={
         'dev': [
             'httpie',
+            'mypy',
         ],
         'systemd': [
             'systemd ; platform_system == "Linux"'
