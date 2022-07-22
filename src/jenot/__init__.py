@@ -6,20 +6,27 @@ from importlib.resources import files
 import json
 import platform
 import time
-from typing import Literal, Optional
+from typing import Literal, NamedTuple, Optional
 
+from meiga import Error, Success, Failure, Result
 import requests
 from requests.exceptions import ConnectionError, Timeout
 import yaml
 
 from . import log
 
+class PollResult(NamedTuple):
+    result: str
+
+    @property
+    def success(self) -> bool:
+        return self.result == 'SUCCESS'
 
 class IterateDecision(Enum):
     CONTINUE = autoenum()
-    SUCCESS = autoenum()
-    FAILURE = autoenum()
+    FINISH = autoenum()
     CONNECTION_ERROR = autoenum()
+    INTERNAL_ERROR = autoenum()
 
 
 def normalize_build_url(url: str, jenkins_base: str) -> str:
@@ -34,58 +41,56 @@ def normalize_build_url(url: str, jenkins_base: str) -> str:
     return url
 
 
-def iterate(url: str, user: Optional[str], token: Optional[str]) -> tuple[IterateDecision, Optional[str]]:
+def iterate(url: str, user: Optional[str], token: Optional[str]) -> tuple[IterateDecision, Optional[PollResult], str]:
+    url_to_get = f'{url}/api/json'
     try:
         auth = (user, token) if any((user, token)) else None
-        resp = requests.get(f'{url}/api/json', auth=auth).json()
+        # TODO: add handling for when result is not json (issue #38)
+        resp = requests.get(url_to_get, auth=auth).json()
     except (ConnectionError, Timeout) as e:
         log.warning(f'connection error: {e}')
-        return IterateDecision.CONNECTION_ERROR, None
+        return IterateDecision.CONNECTION_ERROR, None, url
 
     yaml_resp = yaml.dump(yaml.load(json.dumps(resp), Loader=yaml.FullLoader))
 
+    refined_url = resp.get('url', url)
     try:
         if resp['building']:
-            return IterateDecision.CONTINUE, None
+            return IterateDecision.CONTINUE, None, refined_url
         r = resp['result']
         if not r:
-            return IterateDecision.CONTINUE, None
-        if r == 'SUCCESS':
-            return IterateDecision.SUCCESS, resp['url']
-        else:
-            return IterateDecision.FAILURE, resp['url']
+            return IterateDecision.CONTINUE, None, refined_url
+        result = PollResult(result=r)
+        return IterateDecision.FINISH, result, refined_url
     except Exception as e:
-        log.exception(f'failed to parse api response; got this:\n{yaml_resp}')
-        raise
+        log.exception(f'failed to parse api response from {url_to_get}; got this:\n\n{yaml_resp}\n')
+        return IterateDecision.INTERNAL_ERROR, None, refined_url
 
 
-def run(JENKINS: str, USER: str, TOKEN: str, url: str) -> tuple[int, str]:
+def run_poll(JENKINS: str, USER: str, TOKEN: str, url: str) -> tuple[Result[PollResult, Error], str]:
     url = normalize_build_url(url, JENKINS)
 
     conn_errors = 0
     MAX_CONN_ERRORS = 5
+    refined_url = '' # TODO: silly hack to assure mypy the variable is always bound
     while conn_errors <= MAX_CONN_ERRORS:
-        result, actual_url = iterate(url, USER, TOKEN)
-        actual_url = actual_url or url
-        if result == IterateDecision.CONNECTION_ERROR:
+        decision, result, refined_url = iterate(url, USER, TOKEN)
+        if decision == IterateDecision.CONNECTION_ERROR:
             conn_errors += 1
-            result = IterateDecision.CONTINUE
+            decision = IterateDecision.CONTINUE
         else:
             conn_errors = 0
 
-        if result == IterateDecision.FAILURE:
-            return 1, actual_url
-        elif result == IterateDecision.SUCCESS:
-            return 0, actual_url
-        elif result == IterateDecision.CONTINUE:
+        if decision == IterateDecision.FINISH:
+            return Success(result), refined_url
+        elif decision == IterateDecision.CONTINUE:
             if conn_errors < MAX_CONN_ERRORS:
-                to_sleep = 60 * (conn_errors+1)
-                time.sleep(to_sleep)
+                time.sleep(60 * conn_errors)
         else:
-            assert False, f"unknown value {result}"
+            return Failure(), refined_url
     else:
         log.error(f'Too many ({MAX_CONN_ERRORS}) connection errors, aborting')
-        return 1, actual_url
+        return Failure(), refined_url
 
 
 def logo(ext: Literal['auto', 'ico', 'png']) -> str:
