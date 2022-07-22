@@ -19,5 +19,7 @@ def test_iterate_success() -> None:
         time.sleep(1)
     b: Build = q.get_build()
     time.sleep(1)
-    it, _ = iterate(b.url, None, None)
-    assert it == IterateDecision.SUCCESS
+    it, result, _ = iterate(b.url, None, None)
+    assert it == IterateDecision.FINISH
+    assert result is not None
+    assert result.success
