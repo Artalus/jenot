@@ -9,6 +9,7 @@ setuptools.setup(
     python_requires=">=3.9",
     install_requires=[
         'requests',
+        'meiga',
         'ConfigArgParse',
         'py-notifier',
         'PyQt5',
