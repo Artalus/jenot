@@ -1,13 +1,21 @@
 import subprocess
 import shutil
-from typing import Any
+from typing import Any, cast
 
-from jenot import logo
+from meiga import (
+    Error,
+    Result,
+)
+
+from jenot import (
+    logo,
+    PollResult,
+)
 
 
-def zenity(url: str, build_ok: bool) -> None:
-    result = 'finished' if build_ok else 'failed'
-    key = '--info' if build_ok else '--error'
+def zenity(url: str, result: Result[PollResult, Error]) -> None:
+    msg = _result_to_message(url, result)
+    key = '--info' if result.is_success and cast(PollResult, result.unwrap()).success else '--error'
 
     z = shutil.which('zenity')
     if not z:
@@ -15,40 +23,57 @@ def zenity(url: str, build_ok: bool) -> None:
 
     p = subprocess.Popen([
         z, key,
-        '--text', f'Task {url} {result}!',
-        '--title', f'Build {result}'
+        '--text', f'Task {url} {msg}!',
+        '--title', f'Build {msg}'
     ])
 
 
-def telegram(url: str, build_ok: bool) -> None:
-    result = 'finished' if build_ok else 'failed'
-
+def telegram(url: str, result: Result[PollResult, Error]) -> None:
     t = shutil.which('telegram-send')
     if not t:
         raise RuntimeError('telegram-send executable not found')
 
     p = subprocess.Popen([
-        t, f'Task {url} {result}!'
+        t, _result_to_message(url, result)
     ])
 
 
-def pynotifier(url: str, build_ok: bool) -> None:
-    result = 'finished' if build_ok else 'failed'
+def pynotifier(url: str, result: Result[PollResult, Error]) -> None:
+    msg = _result_to_message(url, result)
     from pynotifier import Notification
     Notification(
         title='Jenot',
-        description=f'Task {url} {result}!',
+        description=f'Task {url} {msg}!',
         icon_path=logo('auto'),
         duration=10,
         urgency='normal'
     ).send()
 
 
-def qt(url: str, build_ok: bool) -> Any:
-    result = 'finished' if build_ok else 'failed'
+def qt(url: str, result: Result[PollResult, Error]) -> Any:
     from PyQt5.QtWidgets import QMessageBox
     return QMessageBox(
         QMessageBox.Icon.Information,
         'Jenot',
-        f'Task {url} {result}!',
+        _result_to_message(url, result),
     )
+
+def _result_to_message(url: str, result: Result[PollResult, Error]) -> str:
+    if result.is_failure:
+        msg = f'Got error while polling for {url}.\nSee logs.'
+    else:
+        value = cast(PollResult, result.unwrap()).result
+        if value == 'SUCCESS':
+            outcome = 'succeeded VV'
+        elif value == 'FAILURE':
+            outcome = 'failed XX'
+        elif value == 'ABORTED':
+            outcome = 'aborted OO'
+        elif value == 'UNSTABLE':
+            outcome = 'is unstable !!'
+        elif value == 'NOT_BUILT':
+            outcome = 'not built ??'
+        else:
+            outcome = value
+        msg = f'Task {url} :\n{outcome}!'
+    return msg

@@ -16,11 +16,11 @@ def main() -> None:
         ok = cast(jenot.PollResult, value).success
 
     if args.zenity:
-        jnotify.zenity(refined_url, ok)
+        jnotify.zenity(refined_url, result)
     if args.telegram:
-        jnotify.telegram(refined_url, ok)
+        jnotify.telegram(refined_url, result)
     if args.pynotifier:
-        jnotify.pynotifier(refined_url, ok)
+        jnotify.pynotifier(refined_url, result)
 
     exit(0 if ok else 1)
 

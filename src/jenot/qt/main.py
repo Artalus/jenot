@@ -38,17 +38,12 @@ class MainWidget(QWidget):
 
 
     def notify(self, result: Result[PollResult, Error], url: str) -> None:
-        value = result.unwrap()
-        if value is None:
-            ok = False
-        else:
-            ok = cast(PollResult, value).success
         # have to store msgbox somewhere so python won't dispose of it
-        self.msgbox = jnotify.qt(url, ok)
+        self.msgbox = jnotify.qt(url, result)
         self.msgbox.show()
 
         if self.args.telegram:
-            jnotify.telegram(url, ok)
+            jnotify.telegram(url, result)
 
 
     def register(self, p: Processor) -> None:
