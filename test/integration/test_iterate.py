@@ -21,14 +21,3 @@ def test_iterate_success() -> None:
     assert it == IterateDecision.FINISH
     assert result is not None
     assert result.success
-
-def test_iterate_continue() -> None:
-    jk = Jenkins('http://localhost:8080')
-    U = uid()
-    q: QueueItem = jk.build_job('sleep', SLEEP=10, UID=U)
-    while not q.get_build():
-        time.sleep(1)
-    b: Build = q.get_build()
-    it, result, _ = iterate(b.url, None, None)
-    assert it == IterateDecision.CONTINUE
-    assert result is None
