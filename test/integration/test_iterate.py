@@ -7,8 +7,6 @@ from api4jenkins.build import Build
 
 from jenot import IterateDecision, iterate
 
-from util.wait import wait_for_200
-
 QUIET_PERIOD_TIMEOUT=15
 
 def test_iterate_success() -> None:

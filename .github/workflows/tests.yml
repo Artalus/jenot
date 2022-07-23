@@ -25,7 +25,12 @@ jobs:
         pip install wheel
         pip install -e .[dev,test]
     - name: unit tests
-      run: pytest test/unit/ --cov --cov-append
+      run: pytest test/unit/ --cov
+    - name: upload unit coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        fail_ci_if_error: true
+        flags: unit
     - name: build plugins docker
       run: |
           docker build . -t jenot-jenkins-plugins -f Dockerfile.jenkins
@@ -34,13 +39,19 @@ jobs:
         docker-compose up -d
         python test/util/wait.py http://localhost:8080/api/json
     - name: integration tests
-      run: pytest test/integration/ --cov --cov-append
+      run: pytest test/integration/ --cov
+    - name: upload integration coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        fail_ci_if_error: true
+        flags: integration
     # - name: system tests
-    #   run: pytest test/system/ --cov --cov-append
+    #   run: pytest test/system/ --cov
+    # - name: upload system coverage to Codecov
+    #   uses: codecov/codecov-action@v3
+    #   with:
+    #     fail_ci_if_error: true
+    #     flags: system
     - name: shutdown compose
       run: |
         docker-compose down
-    - name: "Upload coverage to Codecov"
-      uses: codecov/codecov-action@v1
-      with:
-        fail_ci_if_error: true
