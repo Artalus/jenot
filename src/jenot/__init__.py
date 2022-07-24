@@ -6,14 +6,16 @@ from importlib.resources import files
 import json
 import platform
 import time
-from typing import Literal, NamedTuple, Optional
+from typing import Literal, NamedTuple, Optional, cast
 
 from meiga import Error, Success, Failure, Result
 import requests
 from requests.exceptions import ConnectionError, Timeout
 import yaml
 
-from . import log
+
+from jenot import log
+from jenot.url import normalize_build_url
 
 class PollResult(NamedTuple):
     result: str
@@ -27,18 +29,6 @@ class IterateDecision(Enum):
     FINISH = autoenum()
     CONNECTION_ERROR = autoenum()
     INTERNAL_ERROR = autoenum()
-
-
-def normalize_build_url(url: str, jenkins_base: str) -> str:
-    if not jenkins_base.endswith('/'):
-        jenkins_base += '/'
-    if not url.startswith(jenkins_base):
-        url = jenkins_base+url
-    if url.endswith('/consoleFull'):
-        url = url[:-len('/consoleFull')]
-    if url.endswith('/console'):
-        url = url[:-len('/console')]
-    return url
 
 
 def iterate(url: str, user: Optional[str], token: Optional[str]) -> tuple[IterateDecision, Optional[PollResult], str]:
@@ -68,7 +58,10 @@ def iterate(url: str, user: Optional[str], token: Optional[str]) -> tuple[Iterat
 
 
 def run_poll(JENKINS: str, USER: str, TOKEN: str, url: str) -> tuple[Result[PollResult, Error], str]:
-    url = normalize_build_url(url, JENKINS)
+    normalized = normalize_build_url(url, JENKINS)
+    if normalized.is_failure:
+        return Failure(normalized.value), url
+    url = cast(str, normalized.unwrap())
 
     conn_errors = 0
     MAX_CONN_ERRORS = 5
@@ -87,10 +80,10 @@ def run_poll(JENKINS: str, USER: str, TOKEN: str, url: str) -> tuple[Result[Poll
             if conn_errors < MAX_CONN_ERRORS:
                 time.sleep(60 * conn_errors)
         else:
-            return Failure(), refined_url
+            raise NotImplementedError(f'unknown decision {decision}')
     else:
         log.error(f'Too many ({MAX_CONN_ERRORS}) connection errors, aborting')
-        return Failure(), refined_url
+        return Failure('Too many connection errors'), refined_url
 
 
 def logo(ext: Literal['auto', 'ico', 'png']) -> str:
