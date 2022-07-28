@@ -45,7 +45,7 @@ class WatchlistWindow(QWidget):
             self.model.appendRow([i])
 
 
-if __name__ == '__main__':
+if __name__ == '__main__': # pragma: no cover
     from PyQt5.QtWidgets import (
         QApplication,
     )

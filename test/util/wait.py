@@ -30,6 +30,6 @@ def wait_for_200(url: str, sleep: float=5, timeout: float=5) -> None:
         if sleep:
             time.sleep(sleep)
 
-if __name__ == '__main__':
+if __name__ == '__main__': # pragma: no cover
     import sys
     wait_for_200(sys.argv[1], timeout=300)

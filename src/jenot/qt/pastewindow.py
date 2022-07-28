@@ -55,7 +55,7 @@ class PasteUrlDialog(QDialog):
         self.accept()
 
 
-if __name__ == '__main__':
+if __name__ == '__main__': # pragma: no cover
     from PyQt5.QtWidgets import (
         QApplication,
     )
