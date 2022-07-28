@@ -1,7 +1,11 @@
-from urllib.parse import urlparse
-
 from typing import (
     Optional,
+)
+from urllib.parse import urlparse
+
+from meiga import (
+    Error,
+    Result,
 )
 from PyQt5.QtWidgets import (
     QDialog,
@@ -21,31 +25,33 @@ def uri_validator(x):
     except:
         return False
 
+class NoDataError(Error): pass
+class InvalidDataError(Error): pass
 
 class PasteUrlDialog(QDialog):
-    result_data: Optional[str]
+    result_data: Result[str, Error]
 
     buttonBox: QDialogButtonBox
     textEdit: QTextEdit
 
     def __init__(self, parent: Optional[QWidget]):
         super().__init__(parent)
-        self.initUI()
-        self.result_data = None
+        self.result_data = Result(failure=NoDataError())
+        uic('window.ui', self)
+        self.buttonBox.accepted.connect(self.on_accepted)
         self.textEdit.paste()
 
 
-    def initUI(self) -> None:
-        uic('window.ui', self)
-        self.buttonBox.accepted.connect(self.on_accepted)
 
 
     def on_accepted(self) -> None:
+        self.result_data = Result(failure=NoDataError())
         content = self.textEdit.toPlainText().strip()
         if not uri_validator(content):
             QMessageBox.warning(self, "Validation failed", f'Invalid URL:\n  {content}')
+            self.result_data = Result(failure=InvalidDataError())
             return
-        self.result_data = content
+        self.result_data = Result(success=content)
         self.accept()
 
 

@@ -20,12 +20,16 @@ jobs:
         key: ${{ runner.os }}-pip-${{ hashFiles('setup.py') }}
         restore-keys: |
           ${{ runner.os }}-pip-
-    - name: Install dependencies
+    # pytest-qt will fail with core dump unless enough dependencies are installed
+    # https://pytest-qt.readthedocs.io/en/latest/troubleshooting.html#github-actions
+    - name: Install qt dependencies
+      uses: tlambert03/setup-qt-libs@v1
+    - name: Install python dependencies
       run: |
         pip install wheel
         pip install -e .[dev,test]
     - name: unit tests
-      run: pytest test/unit/ --cov
+      run: xvfb-run -a pytest test/unit/ --cov
     - name: upload unit coverage to Codecov
       uses: codecov/codecov-action@v3
       with:
@@ -39,7 +43,7 @@ jobs:
         docker-compose up -d
         python test/util/wait.py http://localhost:8080/api/json
     - name: integration tests
-      run: pytest test/integration/ --cov
+      run: xvfb-run -a pytest test/integration/ --cov
     - name: upload integration coverage to Codecov
       uses: codecov/codecov-action@v3
       with:

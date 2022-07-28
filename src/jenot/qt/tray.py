@@ -49,6 +49,7 @@ class JenotTray(QSystemTrayIcon):
             self.pasteDialog.activateWindow()
             return
 
+        # TODO: why None? shouldn't it be self.main or self?
         d = PasteUrlDialog(None)
         self.pasteDialog = d
         z = d.exec()
@@ -57,9 +58,10 @@ class JenotTray(QSystemTrayIcon):
         if not z:
             return
 
-        assert d.result_data
+        url = d.result_data.unwrap()
+        assert url, 'got valid string here, all validation happens in dialog'
         a = self.main.args
-        p = Processor(a.url, a.user, a.token, d.result_data)
+        p = Processor(a.url, a.user, a.token, url)
         self.main.register(p)
 
     def on_exit(self) -> None:

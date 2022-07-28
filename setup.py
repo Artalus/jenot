@@ -40,14 +40,15 @@ setuptools.setup(
             'systemd ; platform_system == "Linux"'
         ],
         'installer': [
-            'pyinstaller',
             'doit',
+            'pyinstaller',
         ],
         'test': [
+            'api4jenkins',
             'pytest',
             'pytest-cov',
+            'pytest-qt',
             'requests',
-            'api4jenkins',
         ],
     }
 )
