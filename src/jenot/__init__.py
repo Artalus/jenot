@@ -65,6 +65,7 @@ def run_poll(JENKINS: str, USER: str, TOKEN: str, url: str) -> tuple[Result[Poll
 
     conn_errors = 0
     MAX_CONN_ERRORS = 5
+    POLL_INTERVAL_SECONDS = 60
     refined_url = '' # TODO: silly hack to assure mypy the variable is always bound
     while conn_errors <= MAX_CONN_ERRORS:
         decision, result, refined_url = iterate(url, USER, TOKEN)
@@ -78,7 +79,9 @@ def run_poll(JENKINS: str, USER: str, TOKEN: str, url: str) -> tuple[Result[Poll
             return Success(result), refined_url
         elif decision == IterateDecision.CONTINUE:
             if conn_errors < MAX_CONN_ERRORS:
-                time.sleep(60 * conn_errors)
+                # sleep at least once between each poll, increasing the interval if errors
+                # start to accumulate
+                time.sleep(POLL_INTERVAL_SECONDS * (1 + conn_errors))
         else:
             raise NotImplementedError(f'unknown decision {decision}')
     else:
