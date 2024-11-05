@@ -1,5 +1,5 @@
 # JeNot - Jenkins Notifications <img src="src/jenot/data/logo.png" height=100px width=100px>
-[![codecov](https://codecov.io/gh/Artalus/jenot/branch/master/graph/badge.svg?token=95VMZCNHBQ)](https://codecov.io/gh/Artalus/jenot)
+[![codecov](https://codecov.io/gh/Artalus/jenot/branch/main/graph/badge.svg?token=95VMZCNHBQ)](https://codecov.io/gh/Artalus/jenot)
 [![tests](https://github.com/Artalus/jenot/actions/workflows/tests.yml/badge.svg)](https://github.com/Artalus/jenot/actions/workflows/tests.yml)
 
 > **NOTE**: under construction, buggy, and not production-ready
@@ -81,5 +81,5 @@ To run by hotkey (default is `Alt+A`), use this task:
 ---
 # Installing
 
-- `pip install https://github.com/Artalus/jenot/archive/refs/heads/master.zip`
+- `pip install https://github.com/Artalus/jenot/archive/refs/heads/main.zip`
 - TODO: provide executables from pyinstaller or something
