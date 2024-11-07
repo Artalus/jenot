@@ -1,0 +1,42 @@
+[build-system]
+requires = ['setuptools']
+
+[project]
+name = 'jenot'
+version = '0.0'
+requires-python = '>= 3.9'
+dependencies = [
+    'ConfigArgParse',
+    'meiga',
+    'py-notifier',
+    'PyQt5',
+    'PyQt5-stubs',
+    'PyYAML',
+    'requests',
+]
+
+[project.scripts]
+jenot = 'jenot.__main__:main'
+jenotg = 'jenot.qt.__main__:main'
+
+[project.optional-dependencies]
+dev = [
+    'httpie',
+    'mypy',
+    'pytest',
+    'pytest-cov',
+    'requests',
+    'api4jenkins',
+    'pyinstaller',
+]
+systemd = [
+    'systemd ; platform_system == "Linux"'
+]
+
+[tool.setuptools.package-data]
+'jenot' = [
+    'data/logo.*',
+]
+'jenot.qt' = [
+    'ui/*.ui',
+]

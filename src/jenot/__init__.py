@@ -36,7 +36,9 @@ def iterate(url: str, user: Optional[str], token: Optional[str]) -> tuple[Iterat
     try:
         auth = (user, token) if any((user, token)) else None
         # TODO: add handling for when result is not json (issue #38)
-        resp = requests.get(url_to_get, auth=auth).json()
+        resp = requests.get(url_to_get, auth=auth)
+        log.info(resp.content)
+        resp = resp.json()
     except (ConnectionError, Timeout) as e:
         log.warning(f'connection error: {e}')
         return IterateDecision.CONNECTION_ERROR, None, url

@@ -5,6 +5,7 @@ from typing import Any, Type
 
 from PyQt5.QtWidgets import (
     QApplication,
+    QMessageBox,
 )
 
 from jenot.qt.main import MainWidget
@@ -32,7 +33,16 @@ def main() -> int:
     trayIcon = JenotTray(w.jenot_icon, w)
 
     trayIcon.show()
-    return app.exec()
+    try:
+        return app.exec()
+    except Exception:
+        import traceback
+        QMessageBox(
+            QMessageBox.Icon.Information,
+            'Jenot unexpected error',
+            traceback.format_exc(),
+        )
+        raise
 
 
 if __name__ == '__main__': # pragma: no cover
